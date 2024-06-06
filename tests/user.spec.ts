@@ -1,13 +1,15 @@
 import { expect, test } from "@playwright/test";
+import { faker } from "@faker-js/faker/locale/en";
 
 test("should be able to register to our application", async ({ page }) => {
   await page.goto("/signup");
 
-  await page.getByTestId("first-name").fill("Shihab");
-  await page.getByTestId("last-name").fill("Subair");
-  await page.getByTestId("email").fill("test-shihasubairb@test.com");
-  await page.getByTestId("password").fill("testUser@1");
-  await page.getByTestId("confirm-password").fill("testUser@1");
+  const password = faker.internet.password();
+  await page.getByTestId("first-name").fill(faker.person.firstName());
+  await page.getByTestId("last-name").fill(faker.person.lastName());
+  await page.getByTestId("email").fill(faker.internet.email());
+  await page.getByTestId("password").fill(password);
+  await page.getByTestId("confirm-password").fill(password);
 
   await page.getByTestId("submit").click();
 

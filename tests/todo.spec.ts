@@ -1,13 +1,15 @@
 import { test, expect } from "@playwright/test";
+import { faker } from "@faker-js/faker/locale/en";
 
 test("should be able to add a new todo", async ({ page }) => {
   await page.goto("/signup");
 
-  await page.getByTestId("first-name").fill("Shihab");
-  await page.getByTestId("last-name").fill("Shana");
-  await page.getByTestId("email").fill("test-shihabshana@test.com");
-  await page.getByTestId("password").fill("testUser@1");
-  await page.getByTestId("confirm-password").fill("testUser@1");
+  const password = faker.internet.password();
+  await page.getByTestId("first-name").fill(faker.person.firstName());
+  await page.getByTestId("last-name").fill(faker.person.lastName());
+  await page.getByTestId("email").fill(faker.internet.email());
+  await page.getByTestId("password").fill(password);
+  await page.getByTestId("confirm-password").fill(password);
 
   await page.getByTestId("submit").click();
 
@@ -25,11 +27,12 @@ test("should be able to add a new todo", async ({ page }) => {
 test("should be able to delete a todo", async ({ page }) => {
   await page.goto("/signup");
 
-  await page.getByTestId("first-name").fill("Shihab");
-  await page.getByTestId("last-name").fill("Shana Furhath");
-  await page.getByTestId("email").fill("test-shihabshanaFur@test.com");
-  await page.getByTestId("password").fill("testUser@1");
-  await page.getByTestId("confirm-password").fill("testUser@1");
+  const password = faker.internet.password();
+  await page.getByTestId("first-name").fill(faker.person.firstName());
+  await page.getByTestId("last-name").fill(faker.person.lastName());
+  await page.getByTestId("email").fill(faker.internet.email());
+  await page.getByTestId("password").fill(password);
+  await page.getByTestId("confirm-password").fill(password);
 
   await page.getByTestId("submit").click();
 
