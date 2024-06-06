@@ -1,22 +1,44 @@
 import { test, expect } from "@playwright/test";
 import { faker } from "@faker-js/faker/locale/en";
 
-test("should be able to add a new todo", async ({ page }) => {
-  await page.goto("/signup");
-
+test("should be able to add a new todo", async ({ page, request, context }) => {
   const password = faker.internet.password();
-  await page.getByTestId("first-name").fill(faker.person.firstName());
-  await page.getByTestId("last-name").fill(faker.person.lastName());
-  await page.getByTestId("email").fill(faker.internet.email());
-  await page.getByTestId("password").fill(password);
-  await page.getByTestId("confirm-password").fill(password);
 
-  await page.getByTestId("submit").click();
+  // signing up via API
+  const response = await request.post("/api/v1/users/register", {
+    data: {
+      email: faker.internet.email(),
+      password,
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+    },
+  });
 
-  const welcomeMessage = page.locator("[data-testid=welcome]");
-  await expect(welcomeMessage).toBeVisible();
+  const responseBody = await response.json();
+  const access_token = responseBody.access_token;
+  const firstName = responseBody.firstName;
+  const userID = responseBody.userID;
 
-  await page.getByTestId("add").click();
+  // setting the cookie
+  await context.addCookies([
+    {
+      name: "access_token",
+      value: access_token,
+      url: "https://todo.qacart.com",
+    },
+    {
+      name: "firstName",
+      value: firstName,
+      url: "https://todo.qacart.com",
+    },
+    {
+      name: "userID",
+      value: userID,
+      url: "https://todo.qacart.com",
+    },
+  ]);
+
+  await page.goto("/todo/new");
   await page.getByTestId("new-todo").fill("Learn playwright");
   await page.getByTestId("submit-newTask").click();
 
