@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test("should be able to add a new todo", async ({ page }) => {
-  await page.goto("https://todo.qacart.com/signup");
+  await page.goto("/signup");
 
   await page.getByTestId("first-name").fill("Shihab");
   await page.getByTestId("last-name").fill("Shana");
@@ -23,7 +23,7 @@ test("should be able to add a new todo", async ({ page }) => {
 });
 
 test("should be able to delete a todo", async ({ page }) => {
-  await page.goto("https://todo.qacart.com/signup");
+  await page.goto("/signup");
 
   await page.getByTestId("first-name").fill("Shihab");
   await page.getByTestId("last-name").fill("Shana Furhath");

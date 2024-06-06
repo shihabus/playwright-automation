@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("should be able to register to our application", async ({ page }) => {
-  await page.goto("https://todo.qacart.com/signup");
+  await page.goto("/signup");
 
   await page.getByTestId("first-name").fill("Shihab");
   await page.getByTestId("last-name").fill("Subair");
