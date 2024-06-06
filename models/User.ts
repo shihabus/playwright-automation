@@ -3,6 +3,8 @@ export default class User {
   private lastName: string;
   private email: string;
   private password: string;
+  private access_token: string;
+  private userID: string;
 
   constructor(
     firstName: string,
@@ -27,5 +29,21 @@ export default class User {
   }
   public getPassword() {
     return this.password;
+  }
+
+  getAccessToken() {
+    return this.access_token;
+  }
+
+  getUserID() {
+    return this.userID;
+  }
+
+  setAccessToken(accessToken: string) {
+    this.access_token = accessToken;
+  }
+
+  setUserID(useId: string) {
+    this.userID = useId;
   }
 }
