@@ -1,16 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { faker } from "@faker-js/faker/locale/en";
 import User from "../models/User";
 
 test("should be able to register to our application", async ({ page }) => {
   await page.goto("/signup");
 
-  const user = new User(
-    faker.person.firstName(),
-    faker.person.lastName(),
-    faker.internet.email(),
-    faker.internet.password()
-  );
+  const user = new User();
 
   await page.getByTestId("first-name").fill(user.getFirstName());
   await page.getByTestId("last-name").fill(user.getLastName());

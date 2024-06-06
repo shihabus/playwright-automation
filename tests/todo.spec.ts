@@ -1,16 +1,10 @@
 import { test, expect } from "@playwright/test";
-import { faker } from "@faker-js/faker/locale/en";
 import User from "../models/User";
 import UserApi from "../apis/UserApi";
 import TodoApi from "../apis/TodoApi";
 
 test("should be able to add a new todo", async ({ page, request, context }) => {
-  const user = new User(
-    faker.person.firstName(),
-    faker.person.lastName(),
-    faker.internet.email(),
-    faker.internet.password()
-  );
+  const user = new User();
 
   // signing up via API
   const response = await new UserApi().signUp(request, user);
@@ -48,12 +42,7 @@ test("should be able to add a new todo", async ({ page, request, context }) => {
 });
 
 test("should be able to delete a todo", async ({ page, request, context }) => {
-  const user = new User(
-    faker.person.firstName(),
-    faker.person.lastName(),
-    faker.internet.email(),
-    faker.internet.password()
-  );
+  const user = new User();
 
   // signing up via API
   const response = await new UserApi().signUp(request, user);

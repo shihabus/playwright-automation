@@ -1,3 +1,5 @@
+import { faker } from "@faker-js/faker/locale/en";
+
 export default class User {
   private firstName: string;
   private lastName: string;
@@ -6,16 +8,11 @@ export default class User {
   private access_token: string;
   private userID: string;
 
-  constructor(
-    firstName: string,
-    lastName: string,
-    email: string,
-    password: string
-  ) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.password = password;
+  constructor() {
+    this.firstName = faker.person.firstName();
+    this.lastName = faker.person.lastName();
+    this.email = faker.internet.email();
+    this.password = faker.internet.password();
   }
 
   public getFirstName() {
