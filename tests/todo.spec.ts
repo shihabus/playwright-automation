@@ -46,27 +46,58 @@ test("should be able to add a new todo", async ({ page, request, context }) => {
   expect(await todoItem.innerText()).toEqual("Learn playwright");
 });
 
-test("should be able to delete a todo", async ({ page }) => {
-  await page.goto("/signup");
-
+test("should be able to delete a todo", async ({ page, request, context }) => {
   const password = faker.internet.password();
-  await page.getByTestId("first-name").fill(faker.person.firstName());
-  await page.getByTestId("last-name").fill(faker.person.lastName());
-  await page.getByTestId("email").fill(faker.internet.email());
-  await page.getByTestId("password").fill(password);
-  await page.getByTestId("confirm-password").fill(password);
 
-  await page.getByTestId("submit").click();
+  // signing up via API
+  const response = await request.post("/api/v1/users/register", {
+    data: {
+      email: faker.internet.email(),
+      password,
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+    },
+  });
 
-  const welcomeMessage = page.locator("[data-testid=welcome]");
-  await expect(welcomeMessage).toBeVisible();
+  const responseBody = await response.json();
+  const access_token = responseBody.access_token;
+  const firstName = responseBody.firstName;
+  const userID = responseBody.userID;
 
-  await page.getByTestId("add").click();
-  await page.getByTestId("new-todo").fill("Learn playwright");
-  await page.getByTestId("submit-newTask").click();
+  // setting the cookie
+  await context.addCookies([
+    {
+      name: "access_token",
+      value: access_token,
+      url: "https://todo.qacart.com",
+    },
+    {
+      name: "firstName",
+      value: firstName,
+      url: "https://todo.qacart.com",
+    },
+    {
+      name: "userID",
+      value: userID,
+      url: "https://todo.qacart.com",
+    },
+  ]);
 
+  const learnPlaywright = "Learn playwright";
+
+  await request.post("/api/v1/tasks", {
+    data: {
+      isCompleted: false,
+      item: learnPlaywright,
+    },
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+
+  await page.goto("/todo");
   const todoItem = await page.getByTestId("todo-item");
-  expect(await todoItem.innerText()).toEqual("Learn playwright");
+  expect(await todoItem.innerText()).toEqual(learnPlaywright);
 
   await page.getByTestId("delete").click();
   const noTodo = await page.getByTestId("no-todos");
