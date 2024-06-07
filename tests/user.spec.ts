@@ -1,19 +1,17 @@
 import { expect, test } from "@playwright/test";
 import User from "../models/User";
+import SignUpPage from "../pages/SignUpPage";
+import TodoPage from "../pages/TodoPage";
 
 test("should be able to register to our application", async ({ page }) => {
-  await page.goto("/signup");
-
   const user = new User();
 
-  await page.getByTestId("first-name").fill(user.getFirstName());
-  await page.getByTestId("last-name").fill(user.getLastName());
-  await page.getByTestId("email").fill(user.getEmail());
-  await page.getByTestId("password").fill(user.getPassword());
-  await page.getByTestId("confirm-password").fill(user.getPassword());
+  const signUpPage = new SignUpPage();
 
-  await page.getByTestId("submit").click();
+  await signUpPage.load(page);
+  await signUpPage.signUp(page, user);
 
-  const welcomeMessage = page.locator("[data-testid=welcome]");
+  const todoPage = new TodoPage();
+  const welcomeMessage = todoPage.getWelcomeMessageElem(page);
   await expect(welcomeMessage).toBeVisible();
 });
