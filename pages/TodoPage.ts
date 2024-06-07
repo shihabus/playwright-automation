@@ -13,6 +13,10 @@ export default class TodoPage {
     return `no-todos`;
   }
 
+  private get todoItem() {
+    return `todo-item`;
+  }
+
   async load(page: Page) {
     await page.goto("/todo");
   }
@@ -27,5 +31,9 @@ export default class TodoPage {
 
   async getNoTodoMessage(page: Page) {
     return await page.getByTestId(this.noTodoMessage);
+  }
+
+  async getTodoItem(page: Page) {
+    return await page.getByTestId(this.todoItem);
   }
 }
